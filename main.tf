@@ -41,6 +41,13 @@ resource "azurerm_app_service" "glpi_demo_app" {
   resource_group_name = azurerm_resource_group.glpi_demo_rg.name
   app_service_plan_id = azurerm_app_service_plan.glpi_demo_app_plan.id
   https_only          = true
+
+  site_config {
+    linux_fx_version = "PHP|7.4"
+    always_on        = true
+    php_version      = "7.4"
+    scm_type         = "LocalGit"
+  }
 }
 
 # GLPI database server
@@ -51,7 +58,7 @@ resource "azurerm_mysql_flexible_server" "glpi_demo_db_server" {
   administrator_login    = "mysqladminun"
   administrator_password = "M@dm1n?22"
 
-  sku_name   = "B_Standard_B1ms"
+  sku_name   = "B_Standard_B1s"
 
   tags = azurerm_resource_group.glpi_demo_rg.tags
 }
@@ -61,6 +68,6 @@ resource "azurerm_mysql_flexible_database" "glpi_demo_db" {
   name                = "glpidb"
   resource_group_name = azurerm_resource_group.glpi_demo_rg.name
   server_name         = azurerm_mysql_flexible_server.glpi_demo_db_server.name
-  charset             = "UTF8"
-  collation           = "en_US.utf8"
+  charset             = "utf8"
+  collation           = "utf8_unicode_ci"
 }
